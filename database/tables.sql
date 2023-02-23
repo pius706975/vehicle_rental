@@ -1,0 +1,96 @@
+-- -- Create category table
+-- CREATE TABLE category (
+--     category_id BIGSERIAL NOT NULL PRIMARY KEY,
+--     category_name VARCHAR NOT NULL,
+--     created_at TIMESTAMP DEFAULT NOW NOT NULL,
+--     updated_at TIMESTAMP 
+-- );
+
+-- -- Create users table
+-- CREATE TABLE users (
+--     user_id BIGSERIAL PRIMARY KEY,
+--     first_name VARCHAR NOT NULL,
+--     last_name VARCHAR NOT NULL,
+--     email VARCHAR NOT NULL,
+--     password VARCHAR NOT NULL,
+--     gender VARCHAR NOT NULL,
+--     address VARCHAR NOT NULL,
+--     mobile_number VARCHAR NOT NULL,
+--     image VARCHAR NOT NULL,
+--     created_at TIMESTAMP,
+--     updated_at TIMESTAMP
+-- );
+
+-- -- Create vehicles table
+-- CREATE TABLE vehicles (
+--     vehicle_id BIGSERIAL PRIMARY KEY,
+--     model VARCHAR NOT NULL,
+--     category_id INTEGER NOT NULL,
+--     price INTEGER NOT NULL,
+--     rating INTEGER NOT NULL,
+--     availbility INTEGER NOT NULL,
+--     image VARCHAR NOT NULL,
+--     location VARCHAR NOT NULL,
+--     status VARCHAR NOT NULL,
+--     available BOOLEAN NOT NULL,
+--     created_at TIMESTAMP,
+--     updated_at TIMESTAMP,
+--     CONSTRAINT fk_category
+--         FOREIGN KEY(category_id)
+--             REFERENCES category(category_id)
+--             ON DELETE CASCADE
+-- );
+
+-- -- Create reservations table
+-- CREATE TABLE reservations (
+--     reservation_id BIGSERIAL PRIMARY KEY,
+--     vehicle_id INTEGER NOT NULL,
+--     user_id INTEGER NOT NULL,
+--     qt INTEGER NOT NULL,
+--     start_date_ TIMESTAMP NOT NULL,
+--     return_date TIMESTAMP NOT NULL,
+--     total_payment INTEGER,
+--     CONSTRAINT fk_vehicles
+--         FOREIGN KEY(vehicle_id)
+--             REFERENCES vehicles(vehicle_id)
+--             ON DELETE CASCADE,
+--     CONSTRAINT fk_users
+--         FOREIGN KEY(user_id)
+--             REFERENCES users(user_id)
+--             ON DELETE CASCADE
+-- );
+
+-- -- Create history table
+-- CREATE TABLE history (
+--     history_id BIGSERIAL PRIMARY KEY,
+--     reservation_id INTEGER NOT NULL,
+--     status VARCHAR,
+--     CONSTRAINT fk_reservations
+--         FOREIGN KEY(reservation_id)
+--             REFERENCES reservations(reservation_id)
+--             ON DELETE CASCADE
+-- );
+
+-- CREATE OR REPLACE FUNCTION insert_history_on_reserve() RETURNS TRIGGER AS $$
+-- BEGIN
+--     INSERT INTO history (reservation_id, start_date) VALUES (NEW.reservation_id, NEW.start_date);
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE TRIGGER insert_history_on_reserve
+-- AFTER INSERT ON reservations
+-- FOR EACH ROW
+-- EXECUTE FUNCTION insert_history_on_reserve();
+
+-- CREATE OR REPLACE FUNCTION update_history_on_return() RETURNS TRIGGER AS $$
+-- BEGIN
+--     UPDATE history SET end_date = NEW.end_date WHERE reservation_id = NEW.reservation_id;
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE TRIGGER update_history_on_return
+-- AFTER UPDATE ON reservations
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_history_on_return();
