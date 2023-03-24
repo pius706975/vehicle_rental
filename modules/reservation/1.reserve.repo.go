@@ -24,7 +24,7 @@ func (r *reserve_repo) CreateReservation(data *models.Reservation) (*models.Rese
 
 	var vehicle models.Vehicle
 
-	err := r.db.Where("vehicle_id = ?", data.VehicleID).First(&vehicle).Error
+	err := r.db.Where("vehicle_id = ?", data.Vehicle_ID).First(&vehicle).Error
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (r *reserve_repo) CreateReservation(data *models.Reservation) (*models.Rese
 
 	// create the reservation history
 	history := &models.History{
-		ReservationsID: data.ReservationID,
+		Reservation_ID: data.ReservationID,
 		Status:        "Payment Pending",
 		CreatedAt:     data.CreatedAt,
 		UpdatedAt:     data.UpdatedAt,
@@ -70,7 +70,7 @@ func (r *reserve_repo) CreateReservation(data *models.Reservation) (*models.Rese
 }
 
 // Return vehicle
-func (r *reserve_repo) ReturnVehicle(reservationID uint) error {
+func (r *reserve_repo) ReturnVehicle(reservationID string) error {
 	var vehicle models.Vehicle
 	var reservation models.Reservation
 	var history models.History
@@ -80,7 +80,7 @@ func (r *reserve_repo) ReturnVehicle(reservationID uint) error {
 		return err
 	}
 
-	err = r.db.Where("vehicle_id = ?", reservation.VehicleID).First(&vehicle).Error
+	err = r.db.Where("vehicle_id = ?", reservation.Vehicle_ID).First(&vehicle).Error
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func (r *reserve_repo) ReturnVehicle(reservationID uint) error {
 	return nil
 }
 
-func (r *reserve_repo) Payment(reservationID, userID uint) error {
+func (r *reserve_repo) Payment(reservationID, userID string) error {
 	var reservation models.Reservation
 	var history models.History
 
@@ -159,3 +159,4 @@ func (r *reserve_repo) Payment(reservationID, userID uint) error {
 
 	return nil
 }
+

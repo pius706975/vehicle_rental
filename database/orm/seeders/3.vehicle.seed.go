@@ -1,0 +1,122 @@
+package seeder
+
+import "github.com/pius706975/backend/database/orm/models"
+
+var VehicleSeed = models.Vehicles{
+	{
+		Model:       "Fixie",
+		Category_ID: "cd205e8a-6e8c-4d01-91e2-95d5c3a66fef",
+		Description: "Stop asking, it's obviously a fixie!",
+		Price:       78000,
+		Capacity:    1,
+		Status:      "available",
+		Rating:      4,
+		Stock:       10,
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838004/vehiclerental/1678838000605330700.jpg",
+		Location:    "Malang",
+	},
+
+	{
+		Model:       "Sport Bike",
+		Category_ID: "cd205e8a-6e8c-4d01-91e2-95d5c3a66fef",
+		Description: "Stop asking, it's obviously a sport bike!",
+		Price:       100000,
+		Capacity:    1,
+		Status:      "available",
+		Rating:      5,
+		Stock:       10,
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838699/vehiclerental/1678838696220219900.jpg",
+		Location:    "Samarinda",
+	},
+
+	{
+		Model:       "Onthel",
+		Category_ID: "cd205e8a-6e8c-4d01-91e2-95d5c3a66fef",
+		Description: "Stop asking, it's obviously an onthel bike!",
+		Price:       60000,
+		Capacity:    1,
+		Status:      "available",
+		Rating:      4,
+		Stock:       10,
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838563/vehiclerental/1678838557422522700.jpg",
+		Location:    "Malang",
+	},
+
+	{
+		Model:       "D-Tracker",
+		Category_ID: "7c2c2d26-f935-4f60-92b1-12aaad3a52d3",
+		Description: "Using this motorbike you will be able to through steep and extreme place like a volcano. Don't worry, there's no a volcano in Kalimantan",
+		Price:       150000,
+		Capacity:    2,
+		Status:      "available",
+		Rating:      3,
+		Stock:       10,
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838462/vehiclerental/1678838461160185100.jpg",
+		Location:    "Berau",
+	},
+
+	{
+		Model:       "Classic Supra",
+		Category_ID: "7c2c2d26-f935-4f60-92b1-12aaad3a52d3",
+		Description: "It's perfect for those who love the vibe of the past",
+		Price:       100000,
+		Capacity:    2,
+		Status:      "available",
+		Rating:      4,
+		Stock:       10,
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838421/vehiclerental/1678838419905715900.jpg",
+		Location:    "Yogyakarta",
+	},
+
+	{
+		Model:       "Matic Vespa",
+		Category_ID: "7c2c2d26-f935-4f60-92b1-12aaad3a52d3",
+		Description: "Are you young person? Here is the vespa than can make you look cool when you drive it. Don't worry, it's just a dream. You can't be a gorgeous person just because you drive Vespa.",
+		Price:       120000,
+		Capacity:    2,
+		Status:      "available",
+		Rating:      5,
+		Stock:       10,
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838344/vehiclerental/1678838342181162900.jpg",
+		Location:    "Malang",
+	},
+
+	{
+		Model:       "Big Van",
+		Category_ID: "8700e8d6-d113-4655-9e7e-e2741a0345d1",
+		Description: "You have a family? Use this van for a vocation to the beach, village, etc.",
+		Price:       700000,
+		Capacity:    7,
+		Status:      "available",
+		Rating:      0,
+		Stock:       10,
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1679034546/vehiclerental/1679034538649825300.jpg",
+		Location:    "Yogyakarta",
+	},
+
+	{
+		Model:       "Hummer",
+		Category_ID: "8700e8d6-d113-4655-9e7e-e2741a0345d1",
+		Description: "Do you like something challenging? Here's the hummer. It can be used to through the mointain. How about volcano? Don't worry, this vehicle can be utilized in an extreme location and of course you won't be saved when you come to the volcano.",
+		Price:       700000,
+		Capacity:    7,
+		Status:      "available",
+		Rating:      4,
+		Stock:       10,
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838174/vehiclerental/1678838171658876000.jpg",
+		Location:    "Yogyakarta",
+	},
+
+	{
+		Model:       "Avanza 2021",
+		Category_ID: "8700e8d6-d113-4655-9e7e-e2741a0345d1",
+		Description: "You want to rent a car but you don't have enough money? Don't worry, we provide the affordable cars as well for poor guy like you.",
+		Price:       450000,
+		Capacity:    5,
+		Status:      "available",
+		Rating:      5,
+		Stock:       10,
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838055/vehiclerental/1678838050608697300.png",
+		Location:    "Jakarta",
+	},
+}

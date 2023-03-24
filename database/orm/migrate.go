@@ -1,37 +1,42 @@
 package orm
 
 import (
+	"log"
+
 	"github.com/pius706975/backend/database/orm/models"
 	"github.com/spf13/cobra"
 )
 
 var MigrateCMD = &cobra.Command{
 	Use:   "migrate",
-	Short: "for running database migration",
+	Short: "db migration",
 	RunE:  dbMigrate,
 }
 
-var migUP bool
-var migDOWN bool
+var migUp bool
+var migDown bool
 
 func init() {
-	MigrateCMD.Flags().BoolVarP(&migUP, "dbUP", "u", true, "Running auto migration")
-
-	MigrateCMD.Flags().BoolVarP(&migDOWN, "dbDOWN", "d", false, "Running auto reset migration")
+	MigrateCMD.Flags().BoolVarP(&migUp, "dbUP", "u", true, "run migration up")
+	
+	MigrateCMD.Flags().BoolVarP(&migDown, "dbDOWN", "d", false, "run migration down")
 }
 
 func dbMigrate(cmd *cobra.Command, args []string) error {
+
 	db, err := NewDB()
 	if err != nil {
 		return err
 	}
 
-	if migUP {
-		return db.AutoMigrate(&models.User{}, &models.Vehicle{}, &models.Category{}, &models.History{}, &models.Reservation{})
+	if migDown {
+		log.Println("Migration down done")
+		return db.Migrator().DropTable(&models.User{}, &models.Category{}, &models.Vehicle{}, &models.Reservation{}, &models.History{})
 	}
 
-	if migDOWN {
-		return db.Migrator().DropTable(&models.User{}, &models.Vehicle{}, &models.Category{}, &models.History{}, &models.Reservation{})
+	if migUp {
+		log.Println("Migration up done")
+		return db.AutoMigrate(&models.User{}, &models.Category{}, &models.Vehicle{}, &models.Reservation{}, &models.History{})
 	}
 
 	return nil

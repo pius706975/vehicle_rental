@@ -6,12 +6,14 @@ import (
 	"gorm.io/gorm"
 )
 
-func Auth(route *mux.Router, db *gorm.DB) {
-	router := route.PathPrefix("/user/auth").Subrouter()
+func New(route *mux.Router, db *gorm.DB) {
+	router := route.PathPrefix("/auth").Subrouter()
 
 	repo := users.NewUserRepo(db)
 	service := NewAuthService(repo)
 	ctrl := NewAuthCtrl(*service)
 
-	router.HandleFunc("", ctrl.Login).Methods("POST")
+	router.HandleFunc("/login", ctrl.Login).Methods("POST")
+
+	router.HandleFunc("/verify_email/{token}", ctrl.VerifyEmail).Methods("GET")
 }

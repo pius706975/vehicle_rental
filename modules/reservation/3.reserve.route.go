@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func Reserve(route *mux.Router, db *gorm.DB) {
+func New(route *mux.Router, db *gorm.DB) {
 	router := route.PathPrefix("/reservation").Subrouter()
 
 	repo := NewReserveRepo(db)

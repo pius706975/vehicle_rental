@@ -1,6 +1,7 @@
 package category
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/pius706975/backend/database/orm/models"
@@ -16,10 +17,11 @@ func NewCategoryRepo(db *gorm.DB) category_repo {
 }
 
 func (r *category_repo) AddCategory(data *models.Category) (*models.Category, error) {
-	result := r.db.Create(data)
 
-	if result.Error != nil {
-		return nil, result.Error
+	result := r.db.Create(data).Error
+
+	if result != nil {
+		return nil, errors.New("create data faile")
 	}
 
 	return data, nil
@@ -40,6 +42,7 @@ func (r *category_repo) CategoryExists(category string) (bool, error) {
 }
 
 func (r *category_repo) GetAllCategories() (*models.Categories, error) {
+
 	var data models.Categories
 
 	result := r.db.Find(&data)
@@ -48,15 +51,22 @@ func (r *category_repo) GetAllCategories() (*models.Categories, error) {
 		return nil, result.Error
 	}
 
+	if len(data) == 0 {
+		return nil, errors.New("category is empty")
+	}
+
 	return &data, nil
 }
 
-func (r *category_repo) RemoveCategory(id uint) error {
-	result := r.db.Delete(&models.Category{}, "category_id = ?", id)
+func (r *category_repo) RemoveCategory(ID string) (*models.Category, error) {
 
-	if result.Error != nil {
-		return result.Error
+	var data models.Category
+
+	result := r.db.Delete(data, "category_id = ?", ID).Error
+
+	if result != nil {
+		return nil, result
 	}
 
-	return nil
+	return &data, nil
 }

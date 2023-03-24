@@ -1,6 +1,9 @@
 package users
 
 import (
+	// "log"
+	// "os"
+
 	"github.com/pius706975/backend/database/orm/models"
 	"github.com/pius706975/backend/helper"
 	"github.com/pius706975/backend/libs"
@@ -27,38 +30,64 @@ func (s *user_service) Register(userReg *models.User) *helper.Response {
 		return helper.New("Email already exists", 400, true)
 	}
 
-	// check : mobile number exists
-	mbExists, err := s.repo.MobileNumberExist(userReg.MobileNumber)
+	// check : username exists
+	usernameExists, err := s.repo.UsernameExists(userReg.Username)
 	if err != nil {
 		return helper.New(err.Error(), 400, true)
 	}
-	if mbExists {
-		return helper.New("Mobile number already exists", 400, true)
+	if usernameExists {
+		return helper.New("Username already used", 400, true)
 	}
 
 	// hashing password
-	hashPass, err := libs.HashPassword(userReg.Password)
+	hashPassword, err := libs.HashPassword(userReg.Password)
 	if err != nil {
 		return helper.New(err.Error(), 400, true)
 	}
-	
-	userReg.Password = hashPass
+
+	userReg.Password = hashPassword
+
+	// token verify
+	tokenVerify, err := libs.CodeCrypt(32)
+	if err != nil {
+		return helper.New(err.Error(), 500, true)
+	}
+
+	userReg.TokenVerify = tokenVerify
+
+	// // send email
+	// emailData := libs.EmailData{
+	// 	URL: os.Getenv("BASE_URL") + "/auth/confirm_email/" + tokenVerify,
+	// 	Username: userReg.Username,
+	// 	Subject: "Your verification code",
+	// }
+
+	// err = libs.SendEmail(userReg, &emailData)
+	// if err != nil {
+	// 	return helper.New(err.Error(), 500, true)
+	// }
+
+	// log.Println(err)
 
 	data, err := s.repo.Register(userReg)
 	if err != nil {
 		return helper.New(err.Error(), 400, true)
 	}
 
-	return helper.New(data, 200, false)
+	result, _ := s.repo.GetByID(data.UserID)
+	
+	// log.Println(data)
+
+	return helper.New(result, 200, false)
 }
 
 // UPDATE
-func (s *user_service) UpdateUser(userData *models.User, id uint) *helper.Response {
-	
+func (s *user_service) UpdateUser(userData *models.User, ID string) *helper.Response {
+
 	var user models.User
 
 	// get user data by id and check if there's and error during data retrieval
-	err := s.repo.db.Where("user_id = ?", id).First(&user).Error
+	err := s.repo.db.Where("user_id = ?", ID).First(&user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return helper.New("Data not found", 404, true)
@@ -69,15 +98,13 @@ func (s *user_service) UpdateUser(userData *models.User, id uint) *helper.Respon
 
 	// update password
 	if userData.Password != "" {
-		// hash new password
+
 		hashPassword, err := libs.HashPassword(userData.Password)
-		// check if there's an error during password hashing
 		if err != nil {
 			return helper.New("Password update failed", 400, true)
 		}
-		// set the hashed password as new password
-		userData.Password = hashPassword
 
+		userData.Password = hashPassword
 	}
 
 	// check : email exists
@@ -89,21 +116,21 @@ func (s *user_service) UpdateUser(userData *models.User, id uint) *helper.Respon
 		return helper.New("Email already exists", 400, true)
 	}
 
-	// check : mobile number exists
-	mbExists, err := s.repo.MobileNumberExist(userData.MobileNumber)
+	// check : username exists
+	usernameExists, err := s.repo.UsernameExists(userData.Username)
 	if err != nil {
 		return helper.New(err.Error(), 400, true)
 	}
-	if mbExists {
-		return helper.New("Mobile number already exists", 400, true)
+	if usernameExists {
+		return helper.New("Username already used", 400, true)
 	}
-	
+
 	// FIELD VALIDATION
-	if userData.FirstName == "" {
-		userData.FirstName = user.FirstName
+	if userData.Name == "" {
+		userData.Name = user.Name
 	}
-	if userData.LastName == "" {
-		userData.LastName = user.LastName
+	if userData.Username == "" {
+		userData.Username = user.Username
 	}
 	if userData.Email == "" {
 		userData.Email = user.Email
@@ -127,8 +154,7 @@ func (s *user_service) UpdateUser(userData *models.User, id uint) *helper.Respon
 		userData.Image = user.Image
 	}
 
-
-	result, err := s.repo.UpdateUser(userData, id)
+	result, err := s.repo.UpdateUser(userData, ID)
 	if err != nil {
 		return helper.New(err.Error(), 400, true)
 	}
@@ -137,11 +163,9 @@ func (s *user_service) UpdateUser(userData *models.User, id uint) *helper.Respon
 }
 
 // REMOVE USER
-func (s *user_service) RemoveUser(userID uint) *helper.Response {
-	
-	var user models.User
+func (s *user_service) RemoveUser(userID string) *helper.Response {
 
-	err := s.repo.db.Where("user_id = ?", userID).First(&user).Error
+	_, err := s.repo.GetByID(userID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return helper.New("Data not found", 404, true)
@@ -150,22 +174,36 @@ func (s *user_service) RemoveUser(userID uint) *helper.Response {
 		}
 	}
 
-	err = s.repo.RemoveUser(uint(userID))
+	err = s.repo.RemoveUser(userID)
 	if err != nil {
 		return helper.New(err.Error(), 400, true)
 	}
 
-	result := map[string]string{"Message": "User has been deleted"}
+	result := map[string]string{"Message": "Account has been deleted"}
 
 	return helper.New(result, 200, false)
 }
 
 // GET ALL USERS
 func (s *user_service) GetAllUsers() *helper.Response {
-	
+
 	data, err := s.repo.GetAllUsers()
 	if err != nil {
 		return helper.New(err.Error(), 400, true)
+	}
+
+	return helper.New(data, 200, false)
+}
+
+func (s *user_service) GetByID(ID string) *helper.Response {
+	
+	data, err := s.repo.GetByID(ID)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return helper.New(err.Error(), 404, true)
+		} else {
+			return helper.New(err.Error(), 500, true)
+		}
 	}
 
 	return helper.New(data, 200, false)

@@ -28,7 +28,7 @@ func (s *category_service) AddCategory(categoryData *models.Category) *helper.Re
 
 	data, err := s.repo.AddCategory(categoryData)
 	if err != nil {
-		return helper.New(err.Error(), 400, true)
+		return helper.New(err.Error(), 500, true)
 	}
 
 	return helper.New(data, 200, false)
@@ -46,11 +46,11 @@ func (s *category_service) GetAllCategories() *helper.Response {
 }
 
 // REMOVE CATEGORY
-func (s *category_service) RemoveCategory(categoryID uint) *helper.Response {
+func (s *category_service) RemoveCategory(ID string) *helper.Response {
 
 	var category models.Category
 
-	err := s.repo.db.Where("category_id = ?", categoryID).First(&category).Error
+	err := s.repo.db.Where("category_id = ?", ID).First(&category).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return helper.New("Data not found", 404, true)
@@ -59,9 +59,9 @@ func (s *category_service) RemoveCategory(categoryID uint) *helper.Response {
 		}
 	}
 
-	err = s.repo.RemoveCategory(uint(categoryID))
+	_, err = s.repo.RemoveCategory(ID)
 	if err != nil {
-		return helper.New(err.Error(), 400, true)
+		return helper.New(err.Error(), 500, true)
 	}
 
 	result := map[string]string{"Message": "Category has been deleted"}

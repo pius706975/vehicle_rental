@@ -25,6 +25,7 @@ func AuthMiddle(role ...string) Middleware {
 				helper.New("You need to login first", 401, true).Send(w)
 				return
 			}
+			
 
 			if !strings.Contains(header, "Bearer") {
 				helper.New("Invalid header", 401, true).Send(w)

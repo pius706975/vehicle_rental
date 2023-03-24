@@ -10,17 +10,17 @@ import (
 var mySecret = []byte(os.Getenv("JWT_SECRET"))
 
 type Claims struct {
-	UserID uint
-	Role string
+	UserID string
+	Role   string
 	jwt.RegisteredClaims
 }
 
-func NewToken(id uint, role string) *Claims {
+func NewToken(id string, role string) *Claims {
 	return &Claims{
-		UserID: id,
-		Role: role,
-		RegisteredClaims: jwt.RegisteredClaims{ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 20)),},
-	}	
+		UserID:           id,
+		Role:             role,
+		RegisteredClaims: jwt.RegisteredClaims{ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24))},
+	}
 }
 
 func (c *Claims) CreateToken() (string, error) {

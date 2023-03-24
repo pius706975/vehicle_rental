@@ -3,11 +3,19 @@ package models
 import "time"
 
 type Reservation struct {
-	ReservationID uint      `gorm:"primaryKey" json:"id,omitempty"`
-	VehicleID     uint      `gorm:"not null" json:"vehicle_id"`
-	Vehicle       Vehicle   `gorm:"foreignKey:VehicleID; reference:VehicleID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	UsersID       uint      `gorm:"not null" json:"user_id"`
-	User          User      `gorm:"foreignKey:UsersID; reference:UserID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	ReservationID string    `gorm:"type:uuid; primaryKey; default:uuid_generate_v4()" json:"reservation_id,omitempty" valid:"-"`
+	
+	// VehicleID     string    `gorm:"foreignKey:VehicleID; references:VehicleID; not null;" json:"vehicle_id" valid:"uuidv4"`
+	// Vehicle       Vehicle   `gorm:"foreignKey:VehicleID; references:VehicleID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL" json:"vehicle_data" valid:"-"`
+	Vehicle_ID     string    `gorm:"not null" json:"vehicle_id" valid:"uuidv4"`
+	Vehicle       Vehicle   `gorm:"foreignKey:Vehicle_ID; references:VehicleID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL" json:"vehicle_data" valid:"-"`
+		
+	User_ID       string    `gorm:"not null" json:"user_id" valid:"uuidv4"`
+	User          User      `gorm:"foreignKey:User_ID; references:UserID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL" json:"user_data,omitempty" valid:"-"`
+	
+	// UsersID       string    `gorm:"foreignKey:UserID; references:UserID;" json:"user_id" valid:"uuidv4"`
+	// User          User      `gorm:"foreignKey:UsersID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL" json:"user_data,omitempty" valid:"-"`
+
 	Qt            uint      `gorm:"not null" json:"qt"`
 	StartDate     time.Time `gorm:"type:timestamp; not null" json:"start_date"`
 	ReturnDate    time.Time `gorm:"type:timestamp; not null" json:"return_date"`

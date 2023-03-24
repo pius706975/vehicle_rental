@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	// "net/http"
 	"os"
 
 	"github.com/asaskevich/govalidator"
@@ -21,15 +20,4 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// r, err := router.RouterApp()
-
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// log.Println("App is running on PORT 3001")
-	// err = http.ListenAndServe(":3001", r)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 }

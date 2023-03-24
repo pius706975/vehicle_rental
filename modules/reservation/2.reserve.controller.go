@@ -3,7 +3,6 @@ package reservation
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/pius706975/backend/database/orm/models"
 	"github.com/pius706975/backend/helper"
@@ -22,7 +21,7 @@ func NewReserveCTRL(repo *reserve_repo) *reserve_ctrl {
 func (c *reserve_ctrl) CreateReservation(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
 
-	userID, ok := r.Context().Value(middleware.UserID("user")).(uint)
+	userID, ok := r.Context().Value(middleware.UserID("user")).(string)
 	if !ok {
 		helper.New("Unauthorized", 401, true).Send(w)
 		return
@@ -37,19 +36,13 @@ func (c *reserve_ctrl) CreateReservation(w http.ResponseWriter, r *http.Request)
 	}
 
 	vehicle := models.Vehicle{}
-	err = c.repo.db.First(&vehicle, data.VehicleID).Error
+	err = c.repo.db.Where("vehicle_id = ?", data.Vehicle_ID).First(&vehicle).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	// err = c.repo.db.Save(&vehicle).Error
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// 	return
-	// }
-
-	data.UsersID = userID
+	data.User_ID = userID
 
 	result, err := c.repo.CreateReservation(&data)
 	if err != nil {
@@ -62,16 +55,12 @@ func (c *reserve_ctrl) CreateReservation(w http.ResponseWriter, r *http.Request)
 func (c *reserve_ctrl) ReturnVehicle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
 
-	reservationID, err := strconv.Atoi(r.URL.Query().Get("reservation_id"))
+	reservationID := r.URL.Query().Get("reservation_id")
+
+	err := c.repo.ReturnVehicle(reservationID)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	}
-
-	err_ := c.repo.ReturnVehicle(uint(reservationID))
-
-	if err_ != nil {
-		http.Error(w, err_.Error(), http.StatusBadRequest)
 	}
 
 	w.Write([]byte("Vehicle has been returned"))
@@ -80,19 +69,15 @@ func (c *reserve_ctrl) ReturnVehicle(w http.ResponseWriter, r *http.Request) {
 func (c *reserve_ctrl) Payment(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
 
-	reservationID, err := strconv.Atoi(r.URL.Query().Get("reservation_id"))
+	reservationID := r.URL.Query().Get("reservation_id")
 
-	userID, ok := r.Context().Value(middleware.UserID("user")).(uint)
+	userID, ok := r.Context().Value(middleware.UserID("user")).(string)
 	if !ok {
 		helper.New("Unauthorized", 401, true).Send(w)
 		return
 	}
-	
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-	}
 
-	err_ := c.repo.Payment(uint(reservationID), userID)
+	err_ := c.repo.Payment(reservationID, userID)
 
 	if err_ != nil {
 		http.Error(w, err_.Error(), http.StatusBadRequest)

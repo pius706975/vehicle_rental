@@ -18,10 +18,10 @@ func NewVehicleRepo(db *gorm.DB) Vehicle_Repo {
 
 // add vehicle
 func (r *Vehicle_Repo) AddNewVehicle(data *models.Vehicle) (*models.Vehicle, error) {
-	result := r.db.Create(data)
 
-	if result.Error != nil {
-		return nil, result.Error
+	result := r.db.Preload("Category").Create(data).Find(&data).Error
+	if result != nil {
+		return nil, errors.New("create data failed")
 	}
 
 	return data, nil
@@ -41,37 +41,41 @@ func (r *Vehicle_Repo) ModelExists(model string) (bool, error) {
 }
 
 // remove vehicle
-func (r *Vehicle_Repo) RemoveVehicle(id uint) error {
+func (r *Vehicle_Repo) RemoveVehicle(ID string) error {
 
-	result := r.db.Delete(&models.Vehicle{}, "vehicle_id = ?", id)
-	if result.Error != nil {
-		return result.Error
+	var data models.Vehicle
+
+	result := r.db.Delete(data, "vehicle_id = ?", ID).Error
+	if result != nil {
+		return result
 	}
 
 	return nil
 }
 
 // update vehicle
-func (r *Vehicle_Repo) UpdateVehicle(data *models.Vehicle, id uint) (*models.Vehicle, error) {
+func (r *Vehicle_Repo) UpdateVehicle(data *models.Vehicle, ID string) (*models.Vehicle, error) {
 
-	result := r.db.Model(&data).Where("vehicle_id = ?", id).Updates(&data).Find(&data)
-	if result.Error != nil {
+	result := r.db.Model(&data).Preload("Category").Where("vehicle_id = ?", ID).Updates(&data).Find(&data).Error
+	if result != nil {
 		return nil, errors.New("update failed")
 	}
 
 	return data, nil
 }
 
-
 // get all
 func (r *Vehicle_Repo) GetAllVehicles() (*models.Vehicles, error) {
 
 	var data models.Vehicles
 
-	result := r.db.Find(&data)
+	result := r.db.Preload("Category").Find(&data).Error
+	if result != nil {
+		return nil, errors.New("get data failed")
+	}
 
-	if result.Error != nil {
-		return nil, result.Error
+	if len(data) <= 0 {
+		return nil, errors.New("vehicle data is empty")
 	}
 
 	return &data, nil
@@ -79,52 +83,55 @@ func (r *Vehicle_Repo) GetAllVehicles() (*models.Vehicles, error) {
 
 // get popular
 func (r *Vehicle_Repo) GetPopularVehicles() (*models.Vehicles, error) {
-	
+
 	var data models.Vehicles
 
-	result := r.db.Where("rating >= ?", 4).Order("rating desc").Find(&data)
+	result := r.db.Preload("Category").Where("rating >= ?", 4).Order("rating desc").Limit(4).Find(&data).Error
 
-	if result.Error != nil {
-		return nil, result.Error
+	if result != nil {
+		return nil, result
 	}
 
 	return &data, nil
 }
 
 // get by id
-func (r *Vehicle_Repo) GetVehicleByID(id uint) (*models.Vehicle, error) {
+func (r *Vehicle_Repo) GetVehicleByID(ID string) (*models.Vehicle, error) {
+
 	var vehicle models.Vehicle
 
-	result := r.db.First(&vehicle, id)
-
-	if result.Error != nil {
-		return nil, result.Error
+	result := r.db.Preload("Category").First(&vehicle, "vehicle_id", ID).Error
+	if result != nil {
+		return nil, result
 	}
 
 	return &vehicle, nil
 }
 
-// get by category
-func (r *Vehicle_Repo) GetVehicleByCategory(category string) (*models.Vehicles, error) {
+func (r *Vehicle_Repo) GetByCategory(category string) (*models.Vehicles, error) {
+	
 	var data models.Vehicles
 
-	result := r.db.Table("vehicles").Select("vehicles.*, categories.category_name").Joins("inner join categories on vehicles.categories_id = categories.category_id").Where("categories.category_name ILIKE ?", "%"+strings.ToLower(category)+"%").Find(&data)
- 
-	if result.Error != nil {
-		return nil, result.Error
+	result := r.db.Preload("Category").Where("lower(categories.category_name) ILIKE ?", "%"+strings.ToLower(category)+"%").Joins("inner join categories on vehicles.category_id = categories.category_id").Find(&data).Error
+	if result != nil {
+		return nil, result
 	}
 
 	return &data, nil
 }
 
 // get by model
-func (r *Vehicle_Repo) GetVehicleByModel(model string) (*models.Vehicles, error) {
+func (r *Vehicle_Repo) SearchVehicle(query string) (*models.Vehicles, error) {
+
 	var data models.Vehicles
 
-	result := r.db.Where("model ILIKE ?", "%"+strings.ToLower(model)+"%").Find(&data)
+	result := r.db.Preload("Category").Where("lower(vehicles.model) ILIKE ? OR lower(categories.category_name) ILIKE ? OR lower(vehicles.location) ILIKE ?", "%"+strings.ToLower(query)+"%", "%"+strings.ToLower(query)+"%", "%"+strings.ToLower(query)+"%").Joins("inner join categories on vehicles.category_id = categories.category_id").Find(&data).Error
+	if result != nil {
+		return nil, result
+	}
 
-	if result.Error != nil {
-		return nil, result.Error
+	if len(data) <= 0 {
+		return nil, errors.New("vehicle not found")
 	}
 
 	return &data, nil

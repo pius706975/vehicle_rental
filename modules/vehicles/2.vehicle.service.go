@@ -35,11 +35,9 @@ func (s *vehicle_service) AddNewVehicle(vehicleData *models.Vehicle) *helper.Res
 }
 
 // REMOVE VEHICLE
-func (s *vehicle_service) RemoveVehicle(vehicleID uint) *helper.Response {
-	
-	var vehicle models.Vehicle
+func (s *vehicle_service) RemoveVehicle(vehicleID string) *helper.Response {
 
-	err := s.repo.db.Where("vehicle_id = ?", vehicleID).First(&vehicle).Error
+	_, err := s.repo.GetVehicleByID(vehicleID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return helper.New("Data not found", 404, true)
@@ -48,7 +46,7 @@ func (s *vehicle_service) RemoveVehicle(vehicleID uint) *helper.Response {
 		}
 	}
 
-	err = s.repo.RemoveVehicle(uint(vehicleID))
+	err = s.repo.RemoveVehicle(vehicleID)
 	if err != nil {
 		return helper.New(err.Error(), 400, true)
 	}
@@ -59,11 +57,11 @@ func (s *vehicle_service) RemoveVehicle(vehicleID uint) *helper.Response {
 }
 
 // UPDATE VEHICLE
-func (s *vehicle_service) UpdateVehicle(data *models.Vehicle, id uint) *helper.Response {
-	
+func (s *vehicle_service) UpdateVehicle(data *models.Vehicle, ID string) *helper.Response {
+
 	var vehicle models.Vehicle
 
-	err := s.repo.db.Where("vehicle_id = ?", id).First(&vehicle).Error
+	_, err := s.repo.GetVehicleByID(ID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			helper.New("Data not found", 404, true)
@@ -85,8 +83,8 @@ func (s *vehicle_service) UpdateVehicle(data *models.Vehicle, id uint) *helper.R
 	if data.Model == "" {
 		data.Model = vehicle.Model
 	}
-	if data.CategoriesID == 0 {
-		data.CategoriesID = vehicle.CategoriesID
+	if data.Category_ID == "" {
+		data.Category_ID = vehicle.Category_ID
 	}
 	if data.Price == 0 {
 		data.Price = vehicle.Price
@@ -107,7 +105,7 @@ func (s *vehicle_service) UpdateVehicle(data *models.Vehicle, id uint) *helper.R
 		data.Status = vehicle.Status
 	}
 
-	result, err := s.repo.UpdateVehicle(data, id)
+	result, err := s.repo.UpdateVehicle(data,ID)
 	if err != nil {
 		return helper.New(err.Error(), 400, true)
 	}
@@ -127,10 +125,10 @@ func (s *vehicle_service) GetAllVehicles() *helper.Response {
 	return helper.New(data, 200, false)
 }
 
-// GET BY MODEL
-func (s *vehicle_service) GetVehicleByModel(model string) *helper.Response {
+// GET BY CATEGORY
+func (s *vehicle_service) GetByCategory(category string) *helper.Response {
 
-	data, err := s.repo.GetVehicleByModel(model)
+	data, err := s.repo.GetByCategory(category)
 	if err != nil {
 		return helper.New(err.Error(), 500, true)
 	}
@@ -138,10 +136,10 @@ func (s *vehicle_service) GetVehicleByModel(model string) *helper.Response {
 	return helper.New(data, 200, false)
 }
 
-// GET BY CATEGORY
-func (s *vehicle_service) GetVehicleByCategory(category string) *helper.Response {
-	
-	data, err := s.repo.GetVehicleByCategory(category)
+// GET BY MODEL
+func (s *vehicle_service) SearchVehicle(query string) *helper.Response {
+
+	data, err := s.repo.SearchVehicle(query)
 	if err != nil {
 		return helper.New(err.Error(), 500, true)
 	}
@@ -155,6 +153,16 @@ func (s * vehicle_service) GetPopularVehicle() *helper.Response {
 	data, err := s.repo.GetPopularVehicles()
 	if err != nil {
 		return helper.New(err.Error(), 400, true)
+	}
+
+	return helper.New(data, 200, false)
+}
+
+func (s *vehicle_service) GetVehicleByID(ID string) *helper.Response {
+
+	data, err := s.repo.GetVehicleByID(ID)
+	if err != nil {
+		return helper.New(err.Error(), 500, true)
 	}
 
 	return helper.New(data, 200, false)

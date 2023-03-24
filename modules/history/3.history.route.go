@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func History(route *mux.Router, db *gorm.DB) {
+func New(route *mux.Router, db *gorm.DB) {
 	router := route.PathPrefix("/history").Subrouter()
 
 	repo := NewHistoryRepo(db)
