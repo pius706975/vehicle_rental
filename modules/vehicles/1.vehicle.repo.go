@@ -86,7 +86,7 @@ func (r *Vehicle_Repo) GetPopularVehicles() (*models.Vehicles, error) {
 
 	var data models.Vehicles
 
-	result := r.db.Preload("Category").Where("rating >= ?", 4).Order("rating desc").Limit(4).Find(&data).Error
+	result := r.db.Preload("Category").Where("rating >= ?", 4).Order("rating desc").Find(&data).Error
 
 	if result != nil {
 		return nil, result
