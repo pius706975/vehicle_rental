@@ -15,5 +15,5 @@ func New(route *mux.Router, db *gorm.DB) {
 
 	router.HandleFunc("/login", ctrl.Login).Methods("POST")
 
-	router.HandleFunc("/verify_email/{token}", ctrl.VerifyEmail).Methods("GET")
+	router.HandleFunc("/confirm_email/{token}", ctrl.VerifyEmail).Methods("GET")
 }

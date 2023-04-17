@@ -20,7 +20,7 @@ func SendEmail(user *models.User, data *EmailData) error {
 	h := hermes.Hermes {
 
 		Product: hermes.Product{
-			Name: "Makento Vehicle Rental",
+			Name: "Vehicle Rental",
 			Link: os.Getenv("BASE_URL"),
 			Logo: "https://go.dev/blog/go-brand/Go-Logo/PNG/Go-Logo_Blue.png",
 		},

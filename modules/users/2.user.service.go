@@ -1,8 +1,8 @@
 package users
 
 import (
-	// "log"
-	// "os"
+	"log"
+	"os"
 
 	"github.com/pius706975/backend/database/orm/models"
 	"github.com/pius706975/backend/helper"
@@ -55,19 +55,19 @@ func (s *user_service) Register(userReg *models.User) *helper.Response {
 
 	userReg.TokenVerify = tokenVerify
 
-	// // send email
-	// emailData := libs.EmailData{
-	// 	URL: os.Getenv("BASE_URL") + "/auth/confirm_email/" + tokenVerify,
-	// 	Username: userReg.Username,
-	// 	Subject: "Your verification code",
-	// }
+	// send email
+	emailData := libs.EmailData{
+		URL: os.Getenv("BASE_URL") + "/auth/confirm_email/" + tokenVerify,
+		Username: userReg.Username,
+		Subject: "Your verification code",
+	}
 
-	// err = libs.SendEmail(userReg, &emailData)
-	// if err != nil {
-	// 	return helper.New(err.Error(), 500, true)
-	// }
+	err = libs.SendEmail(userReg, &emailData)
+	if err != nil {
+		return helper.New(err.Error(), 500, true)
+	}
 
-	// log.Println(err)
+	log.Println(err)
 
 	data, err := s.repo.Register(userReg)
 	if err != nil {
