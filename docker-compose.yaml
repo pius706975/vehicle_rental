@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: piuspius/backend:1
+    container_name: go_container
+    env_file: 
+      - .env
+    ports:
+      - '3022:3021'
+    networks:
+      - rentalnet
+  
+#   pgdb:
+#     image: postgres:14.7
+#     container_name: pg_container
+#     environment:
+#       - POSTGRES_DB=${DB_NAME}
+#       - POSTGRES_USER=${DB_USER}
+#       - POSTGRES_PASSWORD=${DB_PASS}
+#     ports:
+#       - '5433:5432'
+#     networks:
+#       - rentalnet
+#     volumes:
+#       - pg_data:/var/lib/postgresql/data
+
+# volumes:
+#   pg_data:
+
+networks:
+  rentalnet: 
+    name: rentalnet
+    driver: bridge
+    external: true

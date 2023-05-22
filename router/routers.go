@@ -14,11 +14,11 @@ import (
 )
 
 func RouterApp() (*mux.Router, error) {
-	
+
 	mainRoute := mux.NewRouter()
 
 	db, err := orm.NewDB()
-	
+
 	if err != nil {
 		return nil, err
 	}
@@ -26,13 +26,19 @@ func RouterApp() (*mux.Router, error) {
 	subRouter := mainRoute.PathPrefix("/api").Subrouter()
 	subRouter.HandleFunc("/", homeHandler).Methods("GET")
 
+	// mainRoute.HandleFunc("/", homeHandler).Methods("GET")
+
 	vehicles.New(subRouter, db)
 	users.New(subRouter, db)
 	auth.New(subRouter, db)
 	reservation.New(subRouter, db)
 	history.New(subRouter, db)
-	category.New(subRouter, db )
+	category.New(subRouter, db)
 
+	// mainRoute.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// 	w.Header().Set("Content-Type", "text/html")
+	// 	w.Write([]byte("Hello API"))
+	// })
 
 	return mainRoute, nil
 }

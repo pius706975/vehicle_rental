@@ -38,7 +38,7 @@ func (s *auth_service) Login(body *models.User) *helper.Response {
 	}
 
 	jwt := libs.NewToken(user.UserID, user.Role)
-	
+
 	token, err := jwt.CreateToken()
 	if err != nil {
 		helper.New(err.Error(), 500, true)
@@ -50,7 +50,7 @@ func (s *auth_service) Login(body *models.User) *helper.Response {
 
 // VERIFY EMAIL
 func (s *auth_service) VerifyEmail(token string) *helper.Response {
-	
+
 	tokenExists := s.repo.TokenExists(token)
 	if !tokenExists {
 		return helper.New("Verification failed", 401, true)
@@ -81,7 +81,7 @@ func (s *auth_service) VerifyEmail(token string) *helper.Response {
 
 // RESEND EMAIL
 func (s *auth_service) ResendEmail(data *models.User) *helper.Response {
-	
+
 	emailExists, err := s.repo.EmailExist(data.Email)
 	if err != nil {
 		return helper.New(err.Error(), 401, true)
@@ -103,9 +103,9 @@ func (s *auth_service) ResendEmail(data *models.User) *helper.Response {
 	data.TokenVerify = tokenVerify
 
 	emailData := libs.EmailData{
-		URL: os.Getenv("BASE_URL") + "/auth/confirm_email" + tokenVerify,
+		URL:      os.Getenv("BASE_URL") + "/auth/confirm_email" + tokenVerify,
 		Username: data.Username,
-		Subject: "Your verification code",
+		Subject:  "Your verification code",
 	}
 
 	err = libs.SendEmail(data, &emailData)
