@@ -12,7 +12,7 @@ var VehicleSeed = models.Vehicles{
 		Status:      "available",
 		Rating:      4,
 		Stock:       10,
-		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838004/vehiclerental/1678838000605330700.jpg",
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1685974464/vehiclerental/1685974458070360676.jpg",
 		Location:    "Malang",
 	},
 
@@ -25,7 +25,7 @@ var VehicleSeed = models.Vehicles{
 		Status:      "available",
 		Rating:      5,
 		Stock:       10,
-		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838699/vehiclerental/1678838696220219900.jpg",
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1685974640/vehiclerental/1685974635455934047.jpg",
 		Location:    "Samarinda",
 	},
 
@@ -38,7 +38,7 @@ var VehicleSeed = models.Vehicles{
 		Status:      "available",
 		Rating:      4,
 		Stock:       10,
-		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838563/vehiclerental/1678838557422522700.jpg",
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1685974738/vehiclerental/1685974732080771555.jpg",
 		Location:    "Malang",
 	},
 
@@ -51,7 +51,7 @@ var VehicleSeed = models.Vehicles{
 		Status:      "available",
 		Rating:      3,
 		Stock:       10,
-		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838462/vehiclerental/1678838461160185100.jpg",
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1685987631/vehiclerental/1685987628975439192.jpg",
 		Location:    "Berau",
 	},
 
@@ -64,7 +64,7 @@ var VehicleSeed = models.Vehicles{
 		Status:      "available",
 		Rating:      4,
 		Stock:       10,
-		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838421/vehiclerental/1678838419905715900.jpg",
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1685987701/vehiclerental/1685987700516274941.jpg",
 		Location:    "Yogyakarta",
 	},
 
@@ -77,7 +77,7 @@ var VehicleSeed = models.Vehicles{
 		Status:      "available",
 		Rating:      5,
 		Stock:       10,
-		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838344/vehiclerental/1678838342181162900.jpg",
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1685987770/vehiclerental/1685987769294562116.jpg",
 		Location:    "Malang",
 	},
 
@@ -90,7 +90,7 @@ var VehicleSeed = models.Vehicles{
 		Status:      "available",
 		Rating:      0,
 		Stock:       10,
-		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1679034546/vehiclerental/1679034538649825300.jpg",
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1685987817/vehiclerental/1685987815615749240.jpg",
 		Location:    "Yogyakarta",
 	},
 
@@ -103,7 +103,7 @@ var VehicleSeed = models.Vehicles{
 		Status:      "available",
 		Rating:      4,
 		Stock:       10,
-		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838174/vehiclerental/1678838171658876000.jpg",
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1685987876/vehiclerental/1685987874952461714.jpg",
 		Location:    "Yogyakarta",
 	},
 
@@ -116,7 +116,7 @@ var VehicleSeed = models.Vehicles{
 		Status:      "available",
 		Rating:      5,
 		Stock:       10,
-		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1678838055/vehiclerental/1678838050608697300.png",
+		Image:       "https://res.cloudinary.com/dccomkorf/image/upload/v1685987933/vehiclerental/1685987930709902037.png",
 		Location:    "Jakarta",
 	},
 }

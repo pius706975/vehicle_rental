@@ -118,7 +118,7 @@ func (s *auth_service) ResendEmail(data *models.User) *helper.Response {
 		return helper.New(err.Error(), 500, true)
 	}
 
-	res := map[string]string{"message": "Verification code is resent"}
+	res := map[string]string{"message": "Email verification resent"}
 
 	return helper.New(res, 200, false)
 }

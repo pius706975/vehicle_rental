@@ -43,13 +43,13 @@ func seedDown(db *gorm.DB) error {
 		},
 
 		{
-			name: models.Category{}.TableName(),
-			model: models.Category{},
+			name: models.Vehicle{}.TableName(),
+			model: models.Vehicle{},
 		},
 
 		{
-			name: models.Vehicle{}.TableName(),
-			model: models.Vehicle{},
+			name: models.Category{}.TableName(),
+			model: models.Category{},
 		},
 	}
 
