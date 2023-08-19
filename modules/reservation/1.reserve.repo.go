@@ -93,7 +93,7 @@ func (r *reserve_repo) ReturnVehicle(reservationID string) error {
 		return err
 	}
 
-	err = r.db.Where("reservations_id = ?", reservationID).First(&history).Error
+	err = r.db.Where("reservation_id = ?", reservationID).First(&history).Error
 	if err != nil {
 		return err
 	}
@@ -125,13 +125,13 @@ func (r *reserve_repo) Payment(reservationID, userID string) error {
 	var reservation models.Reservation
 	var history models.History
 
-	err := r.db.Where("reservation_id = ? and users_id = ?", reservationID, userID).First(&reservation).Error
+	err := r.db.Where("reservation_id = ? and user_id = ?", reservationID, userID).First(&reservation).Error
 	if err != nil {
 		log.Println("in")
 		return err
 	}
 
-	err = r.db.Where("reservations_id = ?", reservationID).First(&history).Error
+	err = r.db.Where("reservation_id = ?", reservationID).First(&history).Error
 	if err != nil {
 		return err
 	}

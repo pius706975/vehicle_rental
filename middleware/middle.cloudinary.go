@@ -28,7 +28,7 @@ func AuthCloudUploadFile() Middleware {
 			file, fileHeader, err := r.FormFile("image")
 			if err != nil {
 				if err == http.ErrMissingFile {
-					i, _ := cld.Image("v1676028039/gorental/default_image.jpg")
+					i, _ := cld.Image("v1692416035/vehiclerental/Default_pfp.svg_ssrfsy.png")
 					urlDefault, _ := i.String()
 					ctx := context.WithValue(r.Context(), "imageName", urlDefault)
 					next.ServeHTTP(w, r.WithContext(ctx))
